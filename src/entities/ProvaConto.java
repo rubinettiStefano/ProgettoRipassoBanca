@@ -1,7 +1,7 @@
 import entities.Conto;
 import libreria.Console;
 
-/*void main()
+void main()
 {
 
 
@@ -22,13 +22,11 @@ import libreria.Console;
     int[] mieiSoldi = {50,500,200,10};
     c.versamentoBanconote(mieiSoldi);
 
-    //negare
     c.prelievo(40);
 
-    //stampare 30
-    Console.print(c.saldo);
-}*/
-
+    Console.print(c.resoconto);
+}
+/*
 void main()
 {
     Conto[] conti = {
@@ -71,4 +69,4 @@ Conto ricercaContoPerNumero(Conto[] arr)
     }
     //posso restituire o un conto o null
     return res;
-}
+}*/

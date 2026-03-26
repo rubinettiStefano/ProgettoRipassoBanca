@@ -2,11 +2,15 @@ package entities;
 
 import libreria.Console;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Conto {
 
     public String numeroConto;
     public String pin;
     public double saldo;
+    public String resoconto = "";
 
     public Conto(String n,String p,double saldoIniziale)
     {
@@ -26,10 +30,13 @@ public class Conto {
         if(valorePrelievoBancomat>saldo)
         {
             Console.print("Il tuo saldo rimante è inferiore al valore che vuoi prelevare");
+            aggiungiFallimetoAlResoconto("Prelievo",valorePrelievoBancomat,"SALDO INSUFFICIENTE");
             return;//return; nei metodi VOID TERMINA ESECUZIONE METODO
+
         }
 
         saldo-=valorePrelievoBancomat;
+        aggiungiAlResoconto("Prelievo",valorePrelievoBancomat,"");
         Console.print("Operazione conclusa con successo, saldo rimanente: "+saldo);
     }
 
@@ -38,9 +45,13 @@ public class Conto {
         if(valoreVersamento>=2000)
         {
             Console.print("WE PAPERONE,PER VERSAMENTI DEL GENERE VAI IN FILIALE");
+            aggiungiFallimetoAlResoconto("Versamento Assegno",valoreVersamento,"CIFRA TROPPO GRANDE");
+
             return;
         }
         saldo+=valoreVersamento;
+        aggiungiAlResoconto("Versamento Assegno",valoreVersamento,"");
+
         Console.print("Operazione conclusa con successo, nuovo saldo : "+saldo);
     }
 
@@ -50,25 +61,18 @@ public class Conto {
         if(banconote.length>5)//non più di 5 banconote per volta
         {
             Console.print("Non abbiamo tutto il giorno, vai in filiale");
+            aggiungiFallimetoAlResoconto("Versamento Bancomat",0,"TROPPE BANCONOTE");
+
             return;
         }
 
-        //facciamo finta che il mio saldo iniziale valga 40
-        //banconote.length ->4
-        //primo giro
-        //i->0      banconote[i]->10       saldo->40     fine primo giro -> 50
-        //secondo giro
-        //i->1      banconote[i]->20       saldo->50     fine primo giro -> 70
-        //terzo giro
-        //i->2      banconote[i]->10       saldo->70     fine primo giro -> 80
-        //quarto giro
-        //i->3     banconote[i]->50       saldo->80     fine primo giro -> 130
-        //quinto giro
-        //i->4         i < banconote.length  diventa false , poichè 4<4, termina
-
+        int sommaValori = 0;
         for (int i = 0; i < banconote.length; i++)
-            saldo+=banconote[i];//saldo=banconote[i]+saldo;
-        //banconote[i]+=saldo //banconote[i]=banconote[i]+saldo;
+            sommaValori+=banconote[i];
+
+        saldo+=sommaValori;
+
+        aggiungiAlResoconto("Versamento Bancomat",sommaValori," Numero banconote: "+banconote.length);
 
         Console.print("Operazione conclusa con successo, nuovo saldo : "+saldo);
     }
@@ -78,22 +82,44 @@ public class Conto {
         if(saldo<valoreBonifico)
         {
             Console.print("NO SOLDI,NON FACCIO BONIFICO");
+            aggiungiFallimetoAlResoconto("Bonifico",valoreBonifico,"NO SOLDI");
+
             return;
         }
         if(destinatario==null)
         {
             Console.print("NO DESTINATARIO,CONTROLLA DATI");
+            aggiungiFallimetoAlResoconto("Bonifico",valoreBonifico,"NO DESTINATARIO");
+
             return;
         }
         if(destinatario.numeroConto.equalsIgnoreCase(numeroConto))
         {
             Console.print("CHE TI FAI IL BONIFICO DA SOLO");
+            aggiungiFallimetoAlResoconto("Bonifico",valoreBonifico,"AUTOBONIFICO");
+
             return;
         }
 
         saldo-=valoreBonifico;
         destinatario.saldo+=valoreBonifico;
+        aggiungiAlResoconto("Versamento Bancomat",valoreBonifico,"Destinatario: "+destinatario.numeroConto);
         Console.print("Operazione conclusa con successo, nuovo saldo : "+ saldo);
+    }
+
+    public void aggiungiAlResoconto(String tipoOperazione,double valoreOperazione,String commentoOpzionale)
+    {
+        //LocalDateTime.now() vi da data e ora attuale
+        resoconto+= LocalDateTime.now()+" - "+tipoOperazione+ "- Euro "+valoreOperazione;
+        if(commentoOpzionale!=null && !commentoOpzionale.equalsIgnoreCase(""))
+            resoconto+=" - "+commentoOpzionale;
+        resoconto+=" - saldo attuale "+saldo+"\n";
+    }
+
+    public void aggiungiFallimetoAlResoconto(String tipoOperazione,double valoreOperazione,String motivoFallimento)
+    {
+        //LocalDateTime.now() vi da data e ora attuale
+        resoconto+= LocalDateTime.now()+" - "+tipoOperazione+ " FALLITO - Euro "+valoreOperazione+" - Motivo Fallimento :"+motivoFallimento+" - saldo attuale "+saldo+"\n";
     }
 
     public String toString()
