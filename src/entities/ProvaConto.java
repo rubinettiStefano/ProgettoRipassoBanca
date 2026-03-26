@@ -15,6 +15,10 @@ void main()
     //permettere e impostare saldo a 30
     c.prelievo(70);
 
+    c.versamentoAssegno(3000);
+    int[] mieiSoldi = {50,500,200,10};
+    c.versamentoBanconote(mieiSoldi);
+
     //negare
     c.prelievo(40);
 
