@@ -16,15 +16,18 @@ void main()
 //    Console.print("Accesso "+(c.provaAccesso(n,p)?"consentito":"negato"));
 
     //permettere e impostare saldo a 30
-    c.prelievo(70);
-
-    c.versamentoAssegno(3000);
-    int[] mieiSoldi = {50,500,200,10};
-    c.versamentoBanconote(mieiSoldi);
-
-    c.prelievo(40);
-
-    Console.print(c.resoconto);
+//    c.prelievo(70);
+//
+//    c.versamentoAssegno(3000);
+//    int[] mieiSoldi = {50,500,200,10};
+//    c.versamentoBanconote(mieiSoldi);
+//
+//    c.prelievo(40);
+//
+//    Console.print(c.resoconto);
+    c.chiediPrestito(50000,2);
+    c.chiediPrestito(15000,5);
+    c.chiediPrestito(15000,3);
 }
 /*
 void main()

@@ -2,7 +2,6 @@ package entities;
 
 import libreria.Console;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Conto {
@@ -30,7 +29,7 @@ public class Conto {
         if(valorePrelievoBancomat>saldo)
         {
             Console.print("Il tuo saldo rimante è inferiore al valore che vuoi prelevare");
-            aggiungiFallimetoAlResoconto("Prelievo",valorePrelievoBancomat,"SALDO INSUFFICIENTE");
+            aggiungiFallimentoAlResoconto("Prelievo",valorePrelievoBancomat,"SALDO INSUFFICIENTE");
             return;//return; nei metodi VOID TERMINA ESECUZIONE METODO
 
         }
@@ -45,7 +44,7 @@ public class Conto {
         if(valoreVersamento>=2000)
         {
             Console.print("WE PAPERONE,PER VERSAMENTI DEL GENERE VAI IN FILIALE");
-            aggiungiFallimetoAlResoconto("Versamento Assegno",valoreVersamento,"CIFRA TROPPO GRANDE");
+            aggiungiFallimentoAlResoconto("Versamento Assegno",valoreVersamento,"CIFRA TROPPO GRANDE");
 
             return;
         }
@@ -61,7 +60,7 @@ public class Conto {
         if(banconote.length>5)//non più di 5 banconote per volta
         {
             Console.print("Non abbiamo tutto il giorno, vai in filiale");
-            aggiungiFallimetoAlResoconto("Versamento Bancomat",0,"TROPPE BANCONOTE");
+            aggiungiFallimentoAlResoconto("Versamento Bancomat",0,"TROPPE BANCONOTE");
 
             return;
         }
@@ -82,29 +81,55 @@ public class Conto {
         if(saldo<valoreBonifico)
         {
             Console.print("NO SOLDI,NON FACCIO BONIFICO");
-            aggiungiFallimetoAlResoconto("Bonifico",valoreBonifico,"NO SOLDI");
+            aggiungiFallimentoAlResoconto("Bonifico",valoreBonifico,"NO SOLDI");
 
             return;
         }
         if(destinatario==null)
         {
             Console.print("NO DESTINATARIO,CONTROLLA DATI");
-            aggiungiFallimetoAlResoconto("Bonifico",valoreBonifico,"NO DESTINATARIO");
+            aggiungiFallimentoAlResoconto("Bonifico",valoreBonifico,"NO DESTINATARIO");
 
             return;
         }
         if(destinatario.numeroConto.equalsIgnoreCase(numeroConto))
         {
             Console.print("CHE TI FAI IL BONIFICO DA SOLO");
-            aggiungiFallimetoAlResoconto("Bonifico",valoreBonifico,"AUTOBONIFICO");
+            aggiungiFallimentoAlResoconto("Bonifico",valoreBonifico,"AUTOBONIFICO");
 
             return;
         }
 
         saldo-=valoreBonifico;
         destinatario.saldo+=valoreBonifico;
-        aggiungiAlResoconto("Versamento Bancomat",valoreBonifico,"Destinatario: "+destinatario.numeroConto);
+        aggiungiAlResoconto("Bonifico",valoreBonifico,"Destinatario: "+destinatario.numeroConto);
         Console.print("Operazione conclusa con successo, nuovo saldo : "+ saldo);
+    }
+
+    public void chiediPrestito(int valorePrestito,int anni)
+    {
+        if(anni>3)
+        {
+            Console.print("No, massimo 3 anni");
+            aggiungiFallimentoAlResoconto("Prestito",valorePrestito,"PRESTITO TROPPO LUNGO");
+            return;
+        }
+        if(valorePrestito>10000*anni)
+        {
+            Console.print("No, massimo 10k euro all'anno");
+            aggiungiFallimentoAlResoconto("Prestito",valorePrestito,"PRESTITO ECCESSIVO");
+            return;
+        }
+        saldo+=valorePrestito;
+
+        double valoreConInteressi = valorePrestito+(valorePrestito*0.2*anni);
+        int numeroRate = anni*12;
+        double rata = valoreConInteressi/numeroRate;
+
+        String stampa = "Prestito da "+valorePrestito+" da restituire in "+numeroRate+" comode rate da "+rata+" euro.\n"+
+                        "Il totale da risarcire è quindi di "+valoreConInteressi+" euro in "+anni+" anni";
+        aggiungiAlResoconto("Prestito",valorePrestito,"Da risarcire in "+anni);
+        Console.print(stampa);
     }
 
     public void aggiungiAlResoconto(String tipoOperazione,double valoreOperazione,String commentoOpzionale)
@@ -116,7 +141,7 @@ public class Conto {
         resoconto+=" - saldo attuale "+saldo+"\n";
     }
 
-    public void aggiungiFallimetoAlResoconto(String tipoOperazione,double valoreOperazione,String motivoFallimento)
+    public void aggiungiFallimentoAlResoconto(String tipoOperazione, double valoreOperazione, String motivoFallimento)
     {
         //LocalDateTime.now() vi da data e ora attuale
         resoconto+= LocalDateTime.now()+" - "+tipoOperazione+ " FALLITO - Euro "+valoreOperazione+" - Motivo Fallimento :"+motivoFallimento+" - saldo attuale "+saldo+"\n";
