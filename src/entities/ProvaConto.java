@@ -25,6 +25,7 @@ void main()
 //    c.prelievo(40);
 //
 //    Console.print(c.resoconto);
+    int val = Console.readInt();
     c.chiediPrestito(50000,2);
     c.chiediPrestito(15000,5);
     c.chiediPrestito(15000,3);
