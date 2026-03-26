@@ -34,12 +34,31 @@ void main() {
             case 3 -> faiPrelievo(mio);
             case 4 -> versaAssegno(mio);
             case 5 -> versaBanconote(mio);
+            case 6 -> richiediPrestito(mio);
+            case 7 -> faiBonifico(mio,conti);
             case 99 -> mio = cambiaConto(conti, mio);
             case -1 -> Console.print("Uscita dal programma. Buon lavoro!\n");
             default -> Console.print("Comando non presente. Riprova.\n");
         }
 
     } while (cmd != -1);
+}
+
+void faiBonifico(Conto mio, Conto[] conti)
+{
+    Conto destinatario = ricercaContoPerNumero(conti);
+    Console.print("Immetti valore bonifico");
+    double val = Console.readDouble();
+    mio.bonifico(destinatario,val);
+}
+
+private void richiediPrestito(Conto mio)
+{
+    Console.print("Quanto vuoi di prestito");
+    int val = Console.readInt();
+    Console.print("Per quanti anni");
+    int anni = Console.readInt();
+    mio.chiediPrestito(val,anni);
 }
 
 void versaBanconote(Conto mio)
@@ -80,6 +99,8 @@ void versaBanconote(Conto mio)
     }
     mio.versamentoBanconote(banconote);
 }
+
+
 
 private void versaAssegno(Conto mio)
 {
@@ -151,10 +172,34 @@ Conto login(Conto[] arr) {
 
 void help() {
     String commands = """
-            =================== MENU ESERCIZI ===================
-            -1 - Termina programma
+            =================== MENU BANCOMAT ===================
              0 - HELP (Mostra questo menu)
+             1 - Visualizza dati del conto
+             2 - Visualizza resoconto/estratto conto
+             3 - Effettua un prelievo
+             4 - Versa un assegno
+             5 - Versa banconote
+             6 - Richiedi un prestito
+             7 - Effettua un bonifico
+            99 - Cambia utente/conto
+            -1 - Termina programma
             =====================================================
             """;
     Console.print(commands);
+}
+
+Conto ricercaContoPerNumero(Conto[] arr)
+{
+    Console.print("Dammi numero conto destinatario");
+    String n = Console.readString();
+
+    //1 - Variabile null
+    Conto res = null;
+    for (int i = 0; i < arr.length; i++)
+    {
+        if(arr[i].numeroConto.equalsIgnoreCase(n))
+            res=arr[i];
+    }
+    //posso restituire o un conto o null
+    return res;
 }
