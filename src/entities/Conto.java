@@ -72,4 +72,32 @@ public class Conto {
 
         Console.print("Operazione conclusa con successo, nuovo saldo : "+saldo);
     }
+
+    public void bonifico(Conto destinatario,double valoreBonifico)
+    {
+        if(saldo<valoreBonifico)
+        {
+            Console.print("NO SOLDI,NON FACCIO BONIFICO");
+            return;
+        }
+        if(destinatario==null)
+        {
+            Console.print("NO DESTINATARIO,CONTROLLA DATI");
+            return;
+        }
+        if(destinatario.numeroConto.equalsIgnoreCase(numeroConto))
+        {
+            Console.print("CHE TI FAI IL BONIFICO DA SOLO");
+            return;
+        }
+
+        saldo-=valoreBonifico;
+        destinatario.saldo+=valoreBonifico;
+        Console.print("Operazione conclusa con successo, nuovo saldo : "+ saldo);
+    }
+
+    public String toString()
+    {
+        return "Conto numero: "+numeroConto+" con saldo "+saldo;
+    }
 }
