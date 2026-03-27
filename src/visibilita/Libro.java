@@ -19,16 +19,23 @@ public class Libro
         return isbn==null ? "" : isbn;
     }
 
-    //erano booleani perchè restituivano TRUE se il valore era stato accettato e cambiato
-    //false se il valore era stato rifiutato
+    /**
+     * Metodo setter che imposta il vlaore dell'ISBN del libro
+     * @param nuovoIsbn la stringa in arrivo, formatta si spera giusta
+     * @return true se la stringa è buona, e la inserisce nella proprietà <br>
+     *          false se la stringa è brutta, non cambia la proprietà
+     */
     public boolean setIsbn(String nuovoIsbn)
     {
-        //AAA-A-AA-AAAAA-A
-        if(nuovoIsbn==null || nuovoIsbn.length()!=16)
+
+        //AAA-AA-AA-AAAAA-A
+        if(nuovoIsbn==null || nuovoIsbn.length()!=17)
         {
             Console.print("BRUTTO,NULLO O DI DIMENSIONE SBAGLIATA");
             return false;
         }
+    //controllo con regex o regexp
+//        if(nuovoIsbn.matches("\\d{3}-\\d{2}-\\d{2}-\\d{5}-\\d"))
 
         //SPLIT delle STRING
         //prende come parametro 1 o più caratteri
@@ -37,6 +44,11 @@ public class Libro
 
         //nuovoIsbn ="978-88-04-77182-1"
         String[]splittato= nuovoIsbn.split("-");
+        //splittato[0] = "978";
+        //splittato[1] = "88";
+        //splittato[2] = "04";
+        //splittato[3] = "77182";
+        //splittato[4] = "1";
 
         if(splittato.length!=5)
         {
@@ -73,11 +85,7 @@ public class Libro
         //String s = " p a p e r i n o";
         //s.charAt(3); -> 'e'
 
-        //splittato[0] = "978";
-        //splittato[1] = "88";
-        //splittato[2] = "04";
-        //splittato[3] = "77182";
-        //splittato[4] = "1";
+
         for(int i=0;i<splittato.length;i++)
         {
             String blocco = splittato[i];
