@@ -8,7 +8,7 @@ public class Conto {
 
     public String numeroConto;
     public String pin;
-    public double saldo;
+    private double saldo;
     public String resoconto = "";
 
     public Conto(String n,String p,double saldoIniziale)
