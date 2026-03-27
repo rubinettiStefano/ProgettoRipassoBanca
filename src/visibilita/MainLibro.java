@@ -10,5 +10,4 @@ void main()
         String in = Console.readString();
         isbnGiusto = b.setIsbn(in);
     }while (!isbnGiusto);
-
 }
